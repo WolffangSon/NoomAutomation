@@ -1,0 +1,35 @@
+{
+    "name": "Noom RealTime Updater",
+    "version": "1.0.1",
+    "description": "Springboard extraction bot",
+    "author": "Wolffang Son",
+    "permissions": ["storage", "tabs", "scripting", "alarms", "notifications"],
+    "host_permissions": ["https://*.zendesk.com/*", "https://*.google.com/*"],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://noom.zendesk.com/explore/dashboard/F64974648059D9AFF2C990481AD2CC4909E37A2FE0650F5DBC924B28CF477C29/tab/25216341"],
+        "js": ["jquery-3.6.1.min.js", "content.js"]
+      }
+    ],
+    "action": {
+      "default_icon": {
+        "16": "icons/bot-inactive-16.png"
+      },
+      "default_title": "Springboard RT Updater"
+    },
+    "icons": {
+      "16": "icons/bot-16.png",
+      "32": "icons/bot-32.png",
+      "64": "icons/bot-64.png",
+      "128": "icons/bot-128.png"
+    },
+    "options_page": "options.html",
+    "options_ui": {
+      "page": "options.html",
+      "open_in_tab": false
+    },
+    "manifest_version": 3
+}
