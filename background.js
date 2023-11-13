@@ -20,7 +20,7 @@ chrome.action.onClicked.addListener((tab) => {
 
   chrome.storage.local.get(['webappURL', 'sheetTab', 'botActive', 'refreshMins'], (result) => {
     if(result.webappURL == '' || result.sheetTab == '') {
-      botSetIcon('warning', 'Five9 RTU Bot (No Webapp URL)');
+      botSetIcon('warning', 'Springboard (No Webapp URL)');
       botNotifSend(
         'warning',
         'No Webapp URL!',
@@ -45,7 +45,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         if(result.botActive == 1) {
           processData(result.tabId, result.webappURL, result.sheetTab, result.userEmail, alarm.name, result.refreshMins);
         } else if(result.botActive == 0) {
-          console.log('Warning: Five9 RTU Bot is inactive! Nothing to do.');
+          console.log('Warning: Springboard RTU Bot is inactive! Nothing to do.');
         } else {
           console.log('Error: botActive variable is not set!');
         }
@@ -78,22 +78,22 @@ function activateBot(tabId, alarmName, refreshMins) {
   
   chrome.tabs.sendMessage(tabId, {type: 'activate'}, (response) => {
     if(chrome.runtime.lastError) {
-      botSetIcon('warning', 'Five9 RTU Bot (Not loaded)');
+      botSetIcon('warning', 'Springboard RTU Bot (Not loaded)');
       botNotifSend(
         'warning',
         'Script not loaded!',
-        'Please refresh the page or make sure you have Verint open and try again.'
+        'Please refresh the page or make sure you have Springboard open and try again.'
       );
     } else {
       setBotAlarm(alarmName, refreshMins);
       chrome.storage.local.set({botActive: 1}, () => {
-        botSetIcon('activated', 'Five9 RTU Bot (Active)', {text: `${refreshMins}`, color: 'green'});
+        botSetIcon('activated', 'Springboard RTU Bot (Active)', {text: `${refreshMins}`, color: 'green'});
         botNotifSend(
           'activated',
-          'Five9 RTU Bot Activated!',
-          `The Five9 Bot is updating every ${refreshMins} minutes.`
+          'Springboard RTU Bot Activated!',
+          `The Springboard Bot is updating every ${refreshMins} minutes.`
         );
-        console.log('Five9 RT Bot Activated!');
+        console.log('Springboard RT Bot Activated!');
       });
     }
   });
@@ -104,13 +104,13 @@ function deactivateBot(alarmName) {
 
   unsetBotAlarm(alarmName);
   chrome.storage.local.set({botActive: 0}, () => {
-    botSetIcon('deactivated', 'Five9 RTU Bot (Inactive)', {text: ''});
+    botSetIcon('deactivated', 'Springboard RTU Bot (Inactive)', {text: ''});
     botNotifSend(
       'deactivated',
-      'Five9 RTU Bot Deactivated!',
+      'Springboard RTU Bot Deactivated!',
       'No more updates.'
     )
-    console.log('Five9 RTU Bot Inactive!');
+    console.log('Springboard RTU Bot Inactive!');
   });
 
 }
@@ -118,7 +118,7 @@ function deactivateBot(alarmName) {
 function setBotAlarm(name, minutes) {
 
   chrome.alarms.create(name, {periodInMinutes: minutes});
-  console.log('Five9 RTU Bot Alarm: ' + name + ' has been set every: ' + minutes + ' minutes');
+  console.log('Springboard RTU Bot Alarm: ' + name + ' has been set every: ' + minutes + ' minutes');
 
 }
 
@@ -126,9 +126,9 @@ function unsetBotAlarm(name) {
 
   chrome.alarms.clear(name, (wasCleared) => {
     if(wasCleared == true) {
-      console.log('Five9 RTU Bot Alarm: ' + name + '. Was unset.');
+      console.log('Springboard RTU Bot Alarm: ' + name + '. Was unset.');
     } else {
-      console.log('Five9 RTU Bot Error: There was an issue unsetting the alarm: ' + name);
+      console.log('Springboard RTU Bot Error: There was an issue unsetting the alarm: ' + name);
     }
   });
   
@@ -165,15 +165,15 @@ function processData(tabId, url, sheetTab, userEmail, alarmName, refreshMins) {
           deactivateBot(alarmName);
           botNotifSend(
             'warning',
-            'Five9 Data Not Processed!',
-            `Deactivating Five9 RTU Bot due to ${result.errorCounter} consecutive failures.`
+            'Springboard Data Not Processed!',
+            `Deactivating Springboard RTU Bot due to ${result.errorCounter} consecutive failures.`
             );
           chrome.storage.local.set({errorCounter: 0});
         } else {
           botNotifSend(
             'warning',
-            'Five9 Data Not Processed!',
-            'Please reload or make sure you have Five9 open and try again.'
+            'Springboard Data Not Processed!',
+            'Please reload or make sure you have Springboard open and try again.'
           );
           chrome.storage.local.set({errorCounter: result.errorCounter + 1});
         }
@@ -188,14 +188,14 @@ function processData(tabId, url, sheetTab, userEmail, alarmName, refreshMins) {
               deactivateBot(alarmName);
               botNotifSend(
                 'warning',
-                'Five9 Data Not Processed!',
-                `Deactivating Five9 RTU Bot due to ${result.errorCounter} consecutive POST failures.`
+                'Springboard Data Not Processed!',
+                `Deactivating Springboard RTU Bot due to ${result.errorCounter} consecutive POST failures.`
                 );
               chrome.storage.local.set({errorCounter: 0});
             } else {
               botNotifSend(
                 'warning',
-                'Five9 Webapp Post Issues!',
+                'Springboard Webapp Post Issues!',
                 'Please make sure you have a valid webapp URL.'
               );
               chrome.storage.local.set({ errorCounter: result.errorCounter + 1 });
@@ -206,7 +206,7 @@ function processData(tabId, url, sheetTab, userEmail, alarmName, refreshMins) {
         } else if(postedData.status == 2) {
           botNotifSend(
             'warning',
-            'Five9 - Unable to Post!',
+            'Springboard - Unable to Post!',
             `Another bot is running: ${postedData.user}`
           );
         }
@@ -225,16 +225,16 @@ function botNotifSend(type, title, message) {
   let icon = '';
   switch(type) {
     case 'activated':
-      icon = 'icons/bot-64.png';
+      icon = 'icons/NoomSun.png';
       break;
     case 'deactivated':
-      icon = 'icons/bot-inactive-64.png';
+      icon = 'icons/NoomDiamond.png';
       break;
     case 'warning':
-      icon = 'icons/bot-warning-64.png';
+      icon = 'icons/NoomDiamond.png';
       break;
     default:
-      icon = 'icons/bot-64.png';
+      icon = 'icons/NoomDiamond.png';
   }
   chrome.notifications.create({
     type: 'basic',
@@ -250,16 +250,16 @@ function botSetIcon(type, title, badge) {
   let icon = '';
   switch(type) {
     case 'activated':
-      icon = 'icons/bot-16.png';
+      icon = 'icons/NoomSum.png';
       break;
     case 'deactivated':
-      icon = 'icons/bot-inactive-16.png';
+      icon = 'icons/NoomDiamond.png';
       break;
     case 'warning':
-      icon = 'icons/bot-warning-16.png';
+      icon = 'icons/NoomDiamond.png';
       break;
     default:
-      icon = 'icons/bot-16.png';
+      icon = 'icons/NoomDiamond.png';
   }
   chrome.action.setIcon({ path: {'16': icon} });
   if(title) {
